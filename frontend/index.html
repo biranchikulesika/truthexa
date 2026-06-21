@@ -762,12 +762,14 @@
     <!-- Javascript Logical Controller -->
     <script>
         const API_URL = "https://sruti2006-satyameva-backend.hf.space/predict";
-        let historyArray = JSON.parse(localStorage.getItem("satyameva_history") || "[]");
-let sampleIndex = 0;
-const loadSamples = [
-    "ସତ୍ୟ ଖବର: ଓଡ଼ିଶାରେ ବୃହତ୍ ବାର୍ଷିକ ବର୍ଷା ପାଣି ପରିସ୍ଥିତି ନିମନ୍ତେ କୃଷକମାନେ ରାଜ୍ୟ ସରକାରରୁ ସହାୟତା ନିଆ ହେଲା।",
-    "ନକଲି ବାର୍ତ୍ତା: ରାଜ୍ୟ ପ୍ରଧାନ ମନ୍ତ୍ରୀ ଅଜାଣା ବିଦେଶୀ ଉପକରଣ ବ୍ୟବହାର କରି ବିଡିଓ ରାତିରେ ଜିବନ ଦାନ ଦେବା ଦାବି କରିଛନ୍ତି।"
-];
+                let historyArray = JSON.parse(localStorage.getItem("satyameva_history") || "[]");
+        const loadSamples = [
+            "ମୁଖ୍ୟମନ୍ତ୍ରୀ ନୂତନ ଯୋଜନା ଘୋଷଣା କରିଛନ୍ତି",
+            "କଟକରେ ନୂଆ ପୁଲ ଉଦ୍ଘାଟନ କରାଗଲା",
+            "ସ୍ୱାସ୍ଥ୍ୟ ବିଭାଗ ଡେଙ୍ଗୁ ରୋଗ ପ୍ରତିରୋଧ ପାଇଁ ସଚେତନତା ଅଭିଯାନ ଆରମ୍ଭ କରିଛି",
+            "ସାବଧାନ! ବଜାରକୁ ଆସିଗଲାଣି ପ୍ଲାଷ୍ଟିକ ଚାଉଳ, ଖାଇଲେ ମଣିଷ ତୁରନ୍ତ ମରିଯାଉଛି!!!",
+            "ନାସା ପକ୍ଷରୁ ସୂଚନା: ଆସନ୍ତା ଶନିବାର ରାତିରେ ସମ୍ପୂର୍ଣ୍ଣ ପୃଥିବୀ ଅନ୍ଧକାର ହୋଇଯିବ।"
+        ];    
 
         // On document start: Check server status and render history log
         window.addEventListener("DOMContentLoaded", () => {
