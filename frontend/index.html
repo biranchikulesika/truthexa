@@ -849,42 +849,34 @@ let sampleIndex = 0; // index for cycling samples
 
             try {
                 const response = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ data: [text] })
-});
-
-// Ensure we got JSON (space may still be warming up)
-const contentType = response.headers.get("content-type") || "";
-if (!response.ok || !contentType.includes("application/json")) {
-    throw new Error("Backend is still initializing. Please try again later.");
-}
-
-const result = await response.json();
-// Gradio typically returns { data: [[prediction, confidence, model_used]] }
-const payload = result?.data?.[0] || [];
-const prediction = payload[0] || "unknown";
-const confidence = payload[1] || 0;
-const model_used = payload[2] || "model";
-
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    // Include required fields for Gradio API
+                    body: JSON.stringify({ data: [text], fn_index: 0, session_hash: "static_hash_123" })
+                });
 
                 if (!response.ok) {
                     throw new Error("HTTP failure");
                 }
 
-                const data = await response.json();
-                
+                const result = await response.json();
+                // Gradio typically returns { data: [[prediction, confidence, model_used]] }
+                const payload = result?.data?.[0] || [];
+                const prediction = payload[0] || "unknown";
+                const confidence = payload[1] || 0;
+                const model_used = payload[2] || "model";
+
                 // Show Verdict Badge
                 const badge = document.getElementById("verdictBadge");
-                badge.innerText = data.prediction;
-                if (data.prediction.toLowerCase() === "real") {
+                badge.innerText = prediction;
+                if (prediction.toLowerCase() === "real") {
                     badge.className = "verdict-badge verdict-real";
                 } else {
                     badge.className = "verdict-badge verdict-fake";
                 }
 
                 // Update Confidence Gauge
-                const pct = Math.round(data.confidence * 100);
+                const pct = Math.round(confidence * 100);
                 document.getElementById("confidencePercent").innerText = `${pct}%`;
                 
                 // Animate SVG Gauge Fill (Circumference of r=36 is 226)
@@ -892,14 +884,14 @@ const model_used = payload[2] || "model";
                 document.getElementById("gaugeFill").style.strokeDashoffset = offset;
                 
                 // Set color theme for gauge stroke
-                if (data.prediction.toLowerCase() === "real") {
+                if (prediction.toLowerCase() === "real") {
                     document.getElementById("gaugeFill").style.stroke = "var(--real-color)";
                 } else {
                     document.getElementById("gaugeFill").style.stroke = "var(--fake-color)";
                 }
 
                 // Metadata mappings
-                document.getElementById("metaModelUsed").innerText = data.model_used;
+                document.getElementById("metaModelUsed").innerText = model_used;
                 document.getElementById("metaTextLen").innerText = text.length;
 
                 // Configure Clickbait Warning panel
@@ -912,7 +904,7 @@ const model_used = payload[2] || "model";
                 }
 
                 // Save to Scan History
-                saveToHistory(text, data.prediction, pct);
+                saveToHistory(text, prediction, pct);
 
                 // Exit loading, show results
                 loader.style.display = "none";
