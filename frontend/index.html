@@ -769,7 +769,8 @@
             "ସ୍ୱାସ୍ଥ୍ୟ ବିଭାଗ ଡେଙ୍ଗୁ ରୋଗ ପ୍ରତିରୋଧ ପାଇଁ ସଚେତନତା ଅଭିଯାନ ଆରମ୍ଭ କରିଛି",
             "ସାବଧାନ! ବଜାରକୁ ଆସିଗଲାଣି ପ୍ଲାଷ୍ଟିକ ଚାଉଳ, ଖାଇଲେ ମଣିଷ ତୁରନ୍ତ ମରିଯାଉଛି!!!",
             "ନାସା ପକ୍ଷରୁ ସୂଚନା: ଆସନ୍ତା ଶନିବାର ରାତିରେ ସମ୍ପୂର୍ଣ୍ଣ ପୃଥିବୀ ଅନ୍ଧକାର ହୋଇଯିବ।"
-        ];    
+        ];
+let sampleIndex = 0; // index for cycling samples
 
         // On document start: Check server status and render history log
         window.addEventListener("DOMContentLoaded", () => {
@@ -808,6 +809,7 @@
         }
 
         function pasteSample() {
+            console.log('pasteSample called', sampleIndex, loadSamples);
             // Cycle through predefined sample news items
             document.getElementById("newsInput").value = loadSamples[sampleIndex];
             sampleIndex = (sampleIndex + 1) % loadSamples.length;
