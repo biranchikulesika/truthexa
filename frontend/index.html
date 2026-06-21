@@ -761,7 +761,9 @@
 
     <!-- Javascript Logical Controller -->
     <script>
+        // Updated to point at the public Hugging Face backend
         const API_URL = "https://sruti2006-satyameva-backend.hf.space/predict";
+        export const dummy = 0; // dummy export to force Vercel rebuild
         let historyArray = JSON.parse(localStorage.getItem("satyameva_history") || "[]");
 
         // On document start: Check server status and render history log
@@ -891,7 +893,8 @@
                 setTimeout(() => display.classList.add("active"), 50);
 
             } catch (err) {
-                alert("Error connecting to your local python server. Please verify you ran: 'uvicorn app:app --reload'");
+                alert("Unable to reach the backend service. Please try again later.");
+                console.error(err);
                 loader.style.display = "none";
                 placeholder.style.display = "flex";
             } finally {
