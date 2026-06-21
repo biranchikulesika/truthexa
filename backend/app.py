@@ -1,11 +1,20 @@
 import os
-import torch
 import pickle
-import torch.nn.functional as F
+# Optional torch import – if unavailable we fallback to TF‑IDF only
+try:
+    import torch
+    import torch.nn.functional as F
+except ImportError:
+    torch = None
+    F = None
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
+try:
+    from transformers import AutoTokenizer, AutoModelForSequenceClassification
+except ImportError:
+    AutoTokenizer = None
+    AutoModelForSequenceClassification = None
 
 app = FastAPI(
     title="Regional Languages Fake News Detector API",
@@ -41,7 +50,7 @@ def load_models():
     
     print(f"Loading system with MODEL_TYPE={MODEL_TYPE}...")
     
-    if MODEL_TYPE == "mbert":
+    if MODEL_TYPE == "mbert" and torch is not None and AutoTokenizer is not None:
         try:
             if not os.path.exists(MBERT_PATH):
                 print(f"⚠️ mBERT model not found at {MBERT_PATH}. Falling back to default 'bert-base-multilingual-cased'...")
@@ -87,7 +96,7 @@ def predict(request: NewsRequest):
         raise HTTPException(status_code=400, detail="Text content cannot be empty")
         
     # --- Option A: mBERT Prediction ---
-    if MODEL_TYPE == "mbert" and model is not None and tokenizer is not None:
+    if MODEL_TYPE == "mbert" and model is not None and tokenizer is not None and torch is not None and AutoTokenizer is not None:
         try:
             inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=128, padding=True)
             with torch.no_grad():
