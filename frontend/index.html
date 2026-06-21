@@ -761,9 +761,7 @@
 
     <!-- Javascript Logical Controller -->
     <script>
-        // Updated to point at the public Hugging Face backend
         const API_URL = "https://sruti2006-satyameva-backend.hf.space/predict";
-        export const dummy = 0; // dummy export to force Vercel rebuild
         let historyArray = JSON.parse(localStorage.getItem("satyameva_history") || "[]");
 
         // On document start: Check server status and render history log
