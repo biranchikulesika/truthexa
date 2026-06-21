@@ -783,13 +783,18 @@ let sampleIndex = 0; // index for cycling samples
             const dot = document.getElementById("apiStatusDot");
             const text = document.getElementById("apiStatusText");
             try {
-                const response = await fetch("https://sruti2006-satyameva-backend.hf.space/health", { method: "GET" });
-                if (response.ok) {
-                    const data = await response.json();
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: "test" })
+                });
+                const contentType = response.headers.get("content-type") || "";
+                if (response.ok && contentType.includes("application/json")) {
                     dot.className = "status-dot online";
-                    text.innerText = `Online (${data.model_type.toUpperCase()})`;
+                    text.innerText = `Online (Model)`;
                 } else {
-                    throw new Error("Offline");
+                    dot.className = "status-dot";
+                    text.innerText = "Waking up… (please wait)";
                 }
             } catch (e) {
                 dot.className = "status-dot";
@@ -844,10 +849,24 @@ let sampleIndex = 0; // index for cycling samples
 
             try {
                 const response = await fetch(API_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ text: text })
-                });
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data: [text] })
+});
+
+// Ensure we got JSON (space may still be warming up)
+const contentType = response.headers.get("content-type") || "";
+if (!response.ok || !contentType.includes("application/json")) {
+    throw new Error("Backend is still initializing. Please try again later.");
+}
+
+const result = await response.json();
+// Gradio typically returns { data: [[prediction, confidence, model_used]] }
+const payload = result?.data?.[0] || [];
+const prediction = payload[0] || "unknown";
+const confidence = payload[1] || 0;
+const model_used = payload[2] || "model";
+
 
                 if (!response.ok) {
                     throw new Error("HTTP failure");
