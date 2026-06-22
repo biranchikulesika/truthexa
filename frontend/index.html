@@ -798,7 +798,7 @@ let sampleIndex = 0; // index for cycling samples
             const text = document.getElementById("apiStatusText");
             try {
                                 // Health check: request the /health endpoint to know if the model is ready
-            const healthUrl = `${BASE_URL}/health`;
+            const healthUrl = `${BASE_URL}/`;
             console.log('Health check URL:', healthUrl);
             const response = await fetch(healthUrl, { method: 'GET' });
             console.log('Health check response', response.status, response.headers.get('content-type'));
