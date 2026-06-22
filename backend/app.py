@@ -89,7 +89,7 @@ class PredictionResponse(BaseModel):
     confidence: float
     model_used: str
 
-@app.post("/predict", response_model=PredictionResponse)
+@app.post("/analyze", response_model=PredictionResponse)
 def predict(request: NewsRequest):
     text = request.text.strip()
     if not text:
@@ -193,15 +193,3 @@ def health():
         "tfidf_loaded": tfidf_model is not None
     }
 
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return {"message": "Backend is running!"}
-
-@app.post("/analyze")
-def analyze_text(text: str):
-    # Replace with your ML model logic
-    return {"prediction": "FAKE", "confidence": 0.78}
