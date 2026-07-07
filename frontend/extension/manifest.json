@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Satyameva Fake News Detector",
+  "name": "Truthexa Fake News Detector",
   "version": "1.0",
   "description": "Checks regional language articles for fake news patterns.",
   "permissions": [

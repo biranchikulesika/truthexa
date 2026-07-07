@@ -2,7 +2,7 @@
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "checkFakeNews",
-    title: "Check with Satyameva Detector",
+    title: "Check with Truthexa Detector",
     contexts: ["selection"]
   });
 });
@@ -24,7 +24,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       chrome.notifications.create({
         type: "basic",
         iconUrl: "icon.png", 
-        title: `Satyameva Result: ${data.prediction}`,
+        title: `Truthexa Result: ${data.prediction}`,
         message: `Prediction: ${data.prediction} (${confidence}% confidence) via ${data.model_used}`,
         priority: 2
       });

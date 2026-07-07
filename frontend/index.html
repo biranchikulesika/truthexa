@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Satyameva | Premium Odia & Regional Fake News Detector</title>
+    <title>Truthexa | Premium Odia & Regional Fake News Detector</title>
     <meta name="description" content="An advanced NLP-powered platform of Machine Learning baselines to detect fake news in Odia and regional Indian languages.">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -626,7 +626,7 @@
                     <path d="m9 11 2 2 4-4"></path>
                 </svg>
             </div>
-            <span class="logo-text">SATYAMEVA</span>
+            <span class="logo-text">TRUTHEXA</span>
         </div>
         
         <div class="status-badge" id="apiStatusBadge">
@@ -776,7 +776,7 @@
     <script>
         const BASE_URL = "https://sruti2006-fake-news-detector-api.hf.space";
         const API_URL = `${BASE_URL}/analyze`;
-                let historyArray = JSON.parse(localStorage.getItem("satyameva_history") || "[]");
+                let historyArray = JSON.parse(localStorage.getItem("truthexa_history") || "[]");
         const loadSamples = [
             "ମୁଖ୍ୟମନ୍ତ୍ରୀ ନୂତନ ଯୋଜନା ଘୋଷଣା କରିଛନ୍ତି",
             "କଟକରେ ନୂଆ ପୁଲ ଉଦ୍ଘାଟନ କରାଗଲା",
@@ -958,7 +958,7 @@ let sampleIndex = 0; // index for cycling samples
             historyArray.unshift(newItem);
             if (historyArray.length > 5) historyArray.pop();
             
-            localStorage.setItem("satyameva_history", JSON.stringify(historyArray));
+            localStorage.setItem("truthexa_history", JSON.stringify(historyArray));
             renderHistory();
         }
 
@@ -995,7 +995,7 @@ let sampleIndex = 0; // index for cycling samples
 
         function clearHistory() {
             historyArray = [];
-            localStorage.removeItem("satyameva_history");
+            localStorage.removeItem("truthexa_history");
             renderHistory();
         }
     </script>
