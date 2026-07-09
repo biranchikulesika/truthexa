@@ -279,13 +279,3 @@ If you have ideas for improvements, feel free to fork the repository, create a f
 This project was developed as part of a college group project. Thanks to my teammates for their contributions during the project.
 
 ---
-
-# 📜 License
-
-This project is developed for **educational, research, and learning purposes**.
-
----
-
-## ⭐ Support
-
-If you found this project useful, consider giving it a **⭐ Star** on GitHub. Your support is greatly appreciated!
