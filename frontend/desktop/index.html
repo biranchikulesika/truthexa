@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truthexa | NLP-Powered Fake News Detection</title>
+    <meta name="description" content="An advanced NLP-powered platform of Machine Learning baselines to detect fake news in Odia and regional Indian languages.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%236366f1'/><stop offset='100%' stop-color='%23ec4899'/></linearGradient></defs><path d='M16 28s10-5 10-13V7L16 3 6 7v8c0 8 10 13 10 13z' fill='url(%23g)'/><polyline points='11 16 14 19 21 12' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- History Drawer Overlay -->
+    <div class="history-drawer-overlay" id="historyOverlay" onclick="toggleHistoryDrawer()"></div>
+
+    <!-- History Drawer -->
+    <aside class="history-drawer" id="historyDrawer">
+        <div class="history-header">
+            <span class="history-title">Recent Verifications</span>
+            <button class="history-close-btn" onclick="toggleHistoryDrawer()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="history-body">
+            <div class="history-list" id="historyList">
+                <!-- Javascript populates this -->
+            </div>
+            <button class="clear-history-btn" id="clearHistoryBtn" onclick="clearHistory()" style="display: none;">Clear History</button>
+        </div>
+    </aside>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: white;">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <path d="m9 11 2 2 4-4"></path>
+                </svg>
+            </div>
+            <span class="logo-text">TRUTHEXA</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <a href="https://github.com/srutiswarupa/truthexa" target="_blank" rel="noopener noreferrer" class="history-toggle-btn" aria-label="GitHub" style="text-decoration:none;display:flex;align-items:center;gap:6px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
+                    <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                </svg>
+                <span style="font-size:0.8rem;font-weight:600;color:var(--text-secondary);">GitHub</span>
+            </a>
+            <button id="historyToggleBtn" onclick="toggleHistoryDrawer()" class="history-toggle-btn" aria-label="History">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero -->
+        <section class="hero-section">
+            <h1 class="hero-title">Verify Regional News in Seconds</h1>
+            <p class="hero-desc">Analyse news for credibility, clickbait, propaganda, and misinformation.</p>
+        </section>
+
+        <!-- Workspace Grid -->
+        <div class="workspace-grid" id="workspaceGrid">
+            <!-- Input Card -->
+            <div class="card input-card">
+                <div class="input-header">
+                    <h2 class="card-title">📰 News Content</h2>
+                </div>
+
+                <div class="textarea-wrapper">
+                    <div class="textarea-container">
+                        <textarea id="newsInput" oninput="handleInput()" placeholder="Type or paste an Odia news article here..."></textarea>
+                        <div class="textarea-controls">
+                            <span class="word-counter" id="wordCounter">0 words</span>
+                            <button class="control-btn danger" id="clearBtn" onclick="clearInput()" style="display:none;">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="secondary-btn" id="sampleBtn" onclick="loadSample()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+                            Samples
+                        </button>
+                        <button class="primary-btn" id="analyzeBtn" onclick="analyzeNews()" disabled>
+                            <span id="analyzeBtnText">Analyse Article →</span>
+                            <svg class="btn-icon-loading" id="btnLoadingIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Card -->
+            <div class="card result-card" id="resultCard">
+                <div class="result-header">
+                    <h2 class="card-title">📊 Analysis Result</h2>
+                </div>
+
+                <!-- Loading State -->
+                <div class="loader-container" id="loaderContainer">
+                    <div class="glow-spinner"></div>
+                    <p class="loader-text" id="loaderMessage">Analysing your article...</p>
+                </div>
+
+                <!-- Placeholder State -->
+                <div class="result-placeholder" id="resultPlaceholder">
+                    <div class="placeholder-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <p class="placeholder-text" id="placeholderText">Type or paste news content to begin analysis.</p>
+                </div>
+
+                <!-- Result Display -->
+                <div class="result-display" id="resultDisplay">
+                    <div class="result-content">
+                        <div class="gauge-section">
+                            <div class="circular-gauge">
+                                <svg viewBox="0 0 80 80">
+                                    <circle class="bg-circle" cx="40" cy="40" r="36"></circle>
+                                    <circle class="fill-circle" id="gaugeFill" cx="40" cy="40" r="36" stroke-dasharray="226.19" stroke-dashoffset="226.19"></circle>
+                                </svg>
+                                <div class="verdict-label">
+                                    <div class="verdict-badge verdict-real" id="verdictBadge">REAL</div>
+                                </div>
+                            </div>
+
+                            <div class="confidence-bar">
+                                <div class="confidence-track"></div>
+                                <div class="confidence-pointer" id="confidencePointer">
+                                    <span class="confidence-value" id="confidenceValue">0%</span>
+                                    <svg width="14" height="10" viewBox="0 0 24 16" fill="currentColor"><polygon points="12,0 24,16 0,16"></polygon></svg>
+                                    <span class="confidence-text">Confidence</span>
+                                </div>
+                            </div>
+
+                            <div class="model-badge">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                TF-IDF Guarded
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-box" id="warningBox">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;">
+                            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <div>
+                            <strong style="display:block;margin-bottom:2px;">Sensational Clickbait Detected</strong>
+                            <span id="warningMsg"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div class="result-error" id="resultError">
+                    <div class="error-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <h4>Verification Failed</h4>
+                    <p id="errorDetails">Something went wrong. Please try again.</p>
+                    <button class="secondary-btn" onclick="analyzeNews()">Retry Analysis</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <div class="toast-container" id="toastContainer"></div>
+</body>
+</html>
