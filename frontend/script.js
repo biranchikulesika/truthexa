@@ -217,7 +217,7 @@ document.querySelectorAll(".analyzeBtnClass").forEach(btn => {
                 // Add loading bubble
                 currentChatLoader = document.createElement('div');
                 currentChatLoader.style.cssText = 'align-self: flex-start; background: transparent; padding: 0 0 16px 0; display: flex; align-items: center; gap: 12px; margin-top: 8px; box-sizing: border-box;';
-                currentChatLoader.innerHTML = `<div class="glow-spinner" style="width: 24px; height: 24px; border-width: 2px;"></div><span style="color: var(--text-secondary); font-size: 0.9rem;">Analyzing...</span>`;
+                currentChatLoader.innerHTML = `<div class="glow-spinner" style="width: 24px; height: 24px; border-width: 2px;"></div><span style="color: var(--text-secondary); font-size: 0.9rem;">Analysing...</span>`;
                 chatContainer.appendChild(currentChatLoader);
                 
                 // Scroll to bottom
@@ -233,7 +233,7 @@ document.querySelectorAll(".analyzeBtnClass").forEach(btn => {
 
             // Enter Loading State
             analyzeBtn.disabled = true;
-            document.querySelector(".analyzeBtnTextClass").innerText = "Analyzing...";
+            document.querySelector(".analyzeBtnTextClass").innerText = "Analysing...";
             document.querySelector(".btnIconLoadingClass").style.display = "block";
             
             placeholder.style.display = "none";
@@ -403,7 +403,7 @@ document.querySelectorAll(".analyzeBtnClass").forEach(btn => {
                 }
             } finally {
                 analyzeBtn.disabled = document.getElementById("newsInput").value.trim().length === 0;
-                document.querySelector(".analyzeBtnTextClass").innerText = "🔍 Analyze Article →";
+                document.querySelector(".analyzeBtnTextClass").innerText = "Analyse Article →";
                 document.querySelector(".btnIconLoadingClass").style.display = "none";
             }
         }

@@ -4,7 +4,7 @@
 
 **Truthexa** is an AI-powered **Regional Fake News Detection System** that helps users verify the authenticity of regional news articles using **Natural Language Processing (NLP)** and **Machine Learning**.
 
-The application transforms textual news into numerical features using **TF-IDF (Term Frequency–Inverse Document Frequency)** and classifies them with a **Logistic Regression** model. Built with **FastAPI** and a responsive web interface, Truthexa delivers fast, lightweight, and reliable predictions. The project also includes a browser extension for convenient news verification.
+The application transforms textual news into numerical features using **TF-IDF (Term Frequency–Inverse Document Frequency)** and classifies them with a **Logistic Regression** model. Built with **FastAPI** and a responsive web interface, Truthexa delivers fast, lightweight, and reliable predictions.
 
 ---
 
@@ -25,10 +25,9 @@ The application transforms textual news into numerical features using **TF-IDF (
 - 📊 TF-IDF Text Vectorization
 - ⚡ Logistic Regression Model
 - 🚀 FastAPI REST API
-- 💻 Responsive Web Application
-- 🧩 Browser Extension Support
+- 📱 Responsive Web Application (Desktop + Mobile)
 - ⚡ Fast Prediction with Low Latency
-- 🌐 Cloud Deployment
+- 🌐 Cloud Deployment (Vercel + Hugging Face Spaces)
 
 ---
 
@@ -62,7 +61,8 @@ The application transforms textual news into numerical features using **TF-IDF (
 # 🛠️ Technology Stack
 
 ### Programming Language
-- Python
+- Python (Backend)
+- JavaScript (Frontend)
 
 ### Backend
 - FastAPI
@@ -76,16 +76,79 @@ The application transforms textual news into numerical features using **TF-IDF (
 ### Frontend
 - HTML5
 - CSS3
-- JavaScript
+- JavaScript (Vanilla)
 
 ### Deployment
-- Hugging Face Spaces (Backend API)
-- Vercel (Frontend)
+- **Frontend**: Vercel
+- **Backend API**: Hugging Face Spaces
 
-### Tools
-- Git
-- GitHub
-- Visual Studio Code
+---
+
+# 📂 Project Structure
+
+```text
+Truthexa/
+│
+├── backend/
+│   ├── app.py                 # FastAPI server
+│   ├── augment.py             # Data augmentation
+│   ├── train_now.py           # Model training script
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   ├── Procfile
+│   ├── fake_news_model.pkl    # Trained model
+│   ├── tfidf_vectorizer.pkl   # TF-IDF vectorizer
+│   ├── train.csv
+│   └── train_expanded.csv
+│
+├── frontend/
+│   ├── index.html             # 🚪 Router — entry point (served by Vercel)
+│   ├── style.css              # Original stylesheet (kept for reference)
+│   ├── script.js              # Original script (kept for reference)
+│   │
+│   ├── desktop/
+│   │   ├── index.html         # Desktop-optimized UI (≥768px)
+│   │   ├── style.css
+│   │   └── script.js
+│   │
+│   └── mobile/
+│       ├── index.html         # Mobile-optimized UI (<768px)
+│       ├── style.css
+│       └── script.js
+│
+├── notebook.ipynb
+├── README.md
+└── .gitignore
+```
+
+---
+
+# 🌐 Frontend Routing: How Desktop & Mobile Versions Are Served
+
+Truthexa uses a **client-side router** strategy (no build tools needed) to serve separate optimized UIs for desktop and mobile.
+
+### How it works
+
+1. **Entry point**: `frontend/index.html` is the only page Vercel serves.
+2. **On page load**, the router detects the viewport width:
+   - **> 768px** → loads the **desktop** version (`desktop/index.html`, `desktop/style.css`, `desktop/script.js`)
+   - **≤ 768px** → loads the **mobile** version (`mobile/index.html`, `mobile/style.css`, `mobile/script.js`)
+3. Each version is fully self-contained — its HTML, CSS, and JS are fetched dynamically and injected into the page.
+4. **On resize** that crosses the 768px breakpoint, the page automatically reloads to switch versions.
+5. **Session storage** prevents infinite reload loops during rapid resizing.
+
+### Why two separate versions?
+
+Instead of a single responsive page that hides/shows elements with CSS `@media` queries, Truthexa serves **completely separate HTML, CSS, and JS** per viewport. This means:
+- No unused desktop code is downloaded on mobile (and vice versa)
+- Each version can have its own layout, interactions, and UX paradigm
+- Desktop uses a workspace grid with a gauge UI; mobile uses a chat-bubble interface
+
+### Required for Vercel
+
+No special configuration is needed. Vercel automatically:
+- Serves `frontend/index.html` as the root page
+- Treats the `desktop/` and `mobile/` directories as static assets accessible via `/desktop/...` and `/mobile/...`
 
 ---
 
@@ -95,7 +158,14 @@ The application transforms textual news into numerical features using **TF-IDF (
               User
                 │
                 ▼
-      Vercel Frontend
+      Vercel Frontend (index.html)
+        │              │
+    ┌────┴────┐   ┌────┴────┐
+    │ Desktop │   │  Mobile │
+    │ (≥768px)│   │ (<768px)│
+    └────┬────┘   └────┬────┘
+         │             │
+         └──────┬──────┘
                 │
         Sends API Request
                 │
@@ -113,68 +183,88 @@ The application transforms textual news into numerical features using **TF-IDF (
       Display Result to User
 ```
 
----
+The frontend communicates with the backend API via `POST /analyze`. The API URL is determined automatically:
+- **Local development** → `http://localhost:8000`
+- **Production** → `https://sruti2006-fake-news-detector-api.hf.space`
 
-# 📂 Project Structure
-
-```text
-Truthexa/
-│
-├── backend/
-│   ├── app.py
-│   ├── augment.py
-│   ├── train_now.py
-│   ├── requirements.txt
-│   ├── Dockerfile
-│   ├── Procfile
-│   ├── fake_news_model.pkl
-│   ├── tfidf_vectorizer.pkl
-│   ├── train.csv
-│   ├── train_expanded.csv
-│   └── venv311/
-│
-├── frontend/
-│   ├── index.html
-│   └── extension/
-│       ├── manifest.json
-│       ├── popup.html
-│       ├── popup.js
-│       └── background.js
-│
-├── notebook.ipynb
-├── README.md
-└── .gitignore
-```
+You can change the API URL in `frontend/desktop/script.js` and `frontend/mobile/script.js` by modifying the `BASE_URL` constant at the top of each file.
 
 ---
 
-# ⚙️ Installation
+# ⚙️ Local Development Setup
 
-### Clone the Repository
+### Prerequisites
+- Python 3.10+
+- Node.js 18+
+- Git
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/your-username/Truthexa.git
-```
-
-### Navigate to the Project Directory
-
-```bash
 cd Truthexa
 ```
 
-### Install Dependencies
+### 2. Install Vercel CLI
+
+```bash
+npm install -g vercel
+```
+
+### 3. Backend Setup (Optional)
+
+The frontend connects to the Hugging Face Spaces API in production. For local backend development:
 
 ```bash
 pip install -r backend/requirements.txt
+uvicorn backend.app:app --reload --port 8000
 ```
 
-### Run the FastAPI Server
+### 4. Start the Frontend
 
 ```bash
-uvicorn backend.app:app --reload
+vercel dev
 ```
 
-Open your browser and visit the local development URL displayed by Uvicorn.
+This starts a local dev server at `http://localhost:3000` that mirrors the Vercel production environment — same rewrites, headers, and static file serving from `frontend/`.
+
+### 5. Verify It Works
+
+1. Type or paste Odia news content in the input area
+2. Click "Analyse Article" (desktop) or the send button (mobile)
+3. View the REAL/FAKE prediction with confidence score
+
+---
+
+# 🚀 Deploying to Vercel (Frontend)
+
+### Option A: Vercel CLI
+
+```bash
+vercel --prod
+```
+
+### Option B: Vercel Dashboard (Git)
+
+1. Push the repository to GitHub
+2. Go to [vercel.com](https://vercel.com) and import your repository
+3. Vercel will detect the root `vercel.json` and set `outputDirectory` to `frontend`
+4. Click **Deploy**
+
+### Configuring the API URL
+
+The frontend automatically detects whether it's running locally or in production and uses the correct backend API URL. If you need to change the backend URL:
+
+- Edit `frontend/desktop/script.js` → change the `BASE_URL` constant
+- Edit `frontend/mobile/script.js` → change the `BASE_URL` constant
+
+The URL detection logic:
+
+```javascript
+const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.includes('run.app')
+    ? window.location.origin
+    : "https://sruti2006-fake-news-detector-api.hf.space";
+```
 
 ---
 
@@ -205,47 +295,16 @@ Prediction
 # 📊 Model Details
 
 ```text
-Domain
-│
-└──► Regional Fake News Detection
-
-Problem
-│
-└──► Binary Text Classification
-
-Input
-│
-└──► News Article / News Headline
-
-Preprocessing
-│
-└──► Text Cleaning & Tokenization
-
-Feature Extraction
-│
-└──► TF-IDF Vectorization
-
-Machine Learning Algorithm
-│
-└──► Logistic Regression
-
-Backend Framework
-│
-└──► FastAPI
-
-Frontend
-│
-└──► HTML • CSS • JavaScript
-
-Deployment
-│
-├──► Frontend → Vercel
-└──► Backend → Hugging Face Spaces
-
-Output
-│
-├──► ✅ Real News
-└──► ❌ Fake News
+Domain        : Regional Fake News Detection
+Problem       : Binary Text Classification
+Input         : News Article / News Headline
+Preprocessing : Text Cleaning & Tokenization
+Feature Extr. : TF-IDF Vectorization
+Algorithm     : Logistic Regression
+Backend       : FastAPI
+Frontend      : HTML • CSS • JavaScript
+Deployment    : Frontend → Vercel | Backend → Hugging Face Spaces
+Output        : ✅ Real News | ❌ Fake News
 ```
 
 ---
@@ -256,9 +315,8 @@ Output
 - 🤖 Transformer-based models (BERT/RoBERTa)
 - 📈 Improved model accuracy
 - 📊 Explainable AI predictions
-- ☁️ Scalable cloud deployment
-- 📱 Mobile application
 - 🔄 Real-time news verification
+- 🧩 Browser extension
 
 ---
 
@@ -267,15 +325,3 @@ Output
 Contributions are welcome!
 
 If you have ideas for improvements, feel free to fork the repository, create a feature branch, and submit a pull request.
-
----
-
-## 👩‍💻 Author
-
-**Sruti Swarupa Mahapatra**
-
-## 🤝 Acknowledgements
-
-This project was developed as part of a college group project. Thanks to my teammates for their contributions during the project.
-
----
