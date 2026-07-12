@@ -195,6 +195,7 @@ You can change the API URL in `frontend/desktop/script.js` and `frontend/mobile/
 
 ### Prerequisites
 - Python 3.10+
+- Node.js 18+
 - Git
 
 ### 1. Clone the Repository
@@ -204,39 +205,33 @@ git clone https://github.com/your-username/Truthexa.git
 cd Truthexa
 ```
 
-### 2. Backend Setup
+### 2. Install Vercel CLI
 
 ```bash
-# Install dependencies
-pip install -r backend/requirements.txt
+npm install -g vercel
+```
 
-# Start the FastAPI server
+### 3. Backend Setup (Optional)
+
+The frontend connects to the Hugging Face Spaces API in production. For local backend development:
+
+```bash
+pip install -r backend/requirements.txt
 uvicorn backend.app:app --reload --port 8000
 ```
 
-The API will be available at `http://localhost:8000`.
-
-### 3. Frontend Setup
-
-The frontend is pure HTML/CSS/JS — no build tools needed. Simply open `frontend/index.html` in your browser:
+### 4. Start the Frontend
 
 ```bash
-# Option A: Open directly
-open frontend/index.html
-
-# Option B: Serve with Python (for proper fetch behavior)
-cd frontend
-python -m http.server 3000
+vercel dev
 ```
 
-Then visit `http://localhost:3000` in your browser.
+This starts a local dev server at `http://localhost:3000` that mirrors the Vercel production environment — same rewrites, headers, and static file serving from `frontend/`.
 
-> **Note**: When opened as a local file (`file://` protocol), `fetch()` may be blocked by CORS. Use a local HTTP server (Option B) for testing.
-
-### 4. Verify It Works
+### 5. Verify It Works
 
 1. Type or paste Odia news content in the input area
-2. Click "Analyze" (desktop) or the send button (mobile)
+2. Click "Analyse Article" (desktop) or the send button (mobile)
 3. View the REAL/FAKE prediction with confidence score
 
 ---
@@ -246,11 +241,6 @@ Then visit `http://localhost:3000` in your browser.
 ### Option A: Vercel CLI
 
 ```bash
-# Install Vercel CLI
-npm install -g vercel
-
-# Deploy from the frontend directory
-cd frontend
 vercel --prod
 ```
 
@@ -258,13 +248,12 @@ vercel --prod
 
 1. Push the repository to GitHub
 2. Go to [vercel.com](https://vercel.com) and import your repository
-3. Set the **Root Directory** to `frontend`
-4. Leave all other settings as default — Vercel will detect the static HTML
-5. Click **Deploy**
+3. Vercel will detect the root `vercel.json` and set `outputDirectory` to `frontend`
+4. Click **Deploy**
 
 ### Configuring the API URL
 
-After deployment, the frontend will automatically detect whether it's running locally or in production and use the correct backend API URL. If you need to change the backend URL:
+The frontend automatically detects whether it's running locally or in production and uses the correct backend API URL. If you need to change the backend URL:
 
 - Edit `frontend/desktop/script.js` → change the `BASE_URL` constant
 - Edit `frontend/mobile/script.js` → change the `BASE_URL` constant
@@ -272,7 +261,7 @@ After deployment, the frontend will automatically detect whether it's running lo
 The URL detection logic:
 
 ```javascript
-const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.includes('run.app')
     ? window.location.origin
     : "https://sruti2006-fake-news-detector-api.hf.space";
 ```
